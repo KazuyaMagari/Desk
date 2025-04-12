@@ -42,8 +42,8 @@ function Desk() {
         scene.add(model);
         setIsLoading(false);
       },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      (_xhr) => {
+        // Progress callback - no console log needed
       },
       (error: unknown) => {
         console.error("GLBの読み込み中にエラーが発生しました", error);
