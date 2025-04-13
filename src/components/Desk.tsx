@@ -3,13 +3,20 @@ import { useEffect, useRef, useState } from "react";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import type { GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import AboutMeModal from "./AboutMeModal";
+import MyWorksModal from "./MyWorksModal";
 
+const gitHubURL = "https://github.com/KazuyaMagari";
+const faceBookURL = "https://www.facebook.com/profile.php?id=100080312090230";
 function Desk() {
   const modelRef = useRef<THREE.Group | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
+  const [modelPosition, setModelPosition] = useState({ y: -10, x: 5 });
+  const [isAboutMeModalOpen, setIsAboutMeModalOpen] = useState(false);
+  const [isMyWorksModalOpen, setIsMyWorksModalOpen] = useState(false);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -39,6 +46,8 @@ function Desk() {
       (gltf: GLTF) => {
         const model = gltf.scene;
         modelRef.current = model;
+        model.position.y = modelPosition.y;
+        model.position.x = modelPosition.x;
         scene.add(model);
         setIsLoading(false);
       },
@@ -73,25 +82,48 @@ function Desk() {
     };
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener("click", onMouseMove);
+    // window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("click", onCLick);
 
-    function onMouseMove(event: MouseEvent) {
+    function onCLick(event: MouseEvent) {
       raycaster.setFromCamera(pointer, camera);
       pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
       pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
       const intersects = raycaster.intersectObjects(scene.children);
-      const selectedObject = intersects[0]?.object;
-      const color = new THREE.Color(0xff0000);
-      if (selectedObject instanceof THREE.Mesh) {
-        selectedObject.material.color.set(color);
+      if (intersects.length > 0) {
+        console.log("Clicked object name:", intersects[0].object.name);
+        if (
+          intersects[0].object.name === "Object_5" ||
+          intersects[0].object.name === "Object_4"
+        ) {
+          window.open(gitHubURL, "_blank");
+        } else if (
+          intersects[0].object.name === "Object_4002" ||
+          intersects[0].object.name === "Object_5002"
+        ) {
+          window.open(faceBookURL, "_blank");
+        } else if (intersects[0].object.name === "Object_10001") {
+          setIsAboutMeModalOpen(true);
+        } else if (intersects[0].object.name === "Plane002") {
+          setIsMyWorksModalOpen(true);
+        }
       }
-      console.log(intersects);
-
-      renderer.render(scene, camera);
     }
 
     const animate = () => {
       controls.update();
+      if (modelRef.current) {
+        if (modelRef.current.position.y < 0) {
+          modelRef.current.position.y += 0.1;
+        }
+        if (modelRef.current.position.x > 0) {
+          modelRef.current.position.x -= 0.1;
+        }
+        setModelPosition({
+          y: modelRef.current.position.y,
+          x: modelRef.current.position.x,
+        });
+      }
       renderer.render(scene, camera);
       window.requestAnimationFrame(animate);
     };
@@ -140,6 +172,14 @@ function Desk() {
           Loading...
         </div>
       )}
+      <AboutMeModal
+        isOpen={isAboutMeModalOpen}
+        onClose={() => setIsAboutMeModalOpen(false)}
+      />
+      <MyWorksModal
+        isOpen={isMyWorksModalOpen}
+        onClose={() => setIsMyWorksModalOpen(false)}
+      />
     </>
   );
 }
