@@ -23,30 +23,45 @@ function Desk() {
   const handleClick = (event: MouseEvent) => {
     if (!cameraRef.current || !sceneRef.current) return;
 
-    raycaster.setFromCamera(pointer, cameraRef.current);
+    // クリック座標の正規化
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    const intersects = raycaster.intersectObjects(sceneRef.current.children);
+
+    // レイキャスターの設定
+    raycaster.setFromCamera(pointer, cameraRef.current);
+
+    // デバッグ用のログ
+    console.log("Click coordinates:", pointer.x, pointer.y);
+
+    // シーン内のすべてのオブジェクトを検索
+    const intersects = raycaster.intersectObjects(
+      sceneRef.current.children,
+      true
+    );
+
     if (intersects.length > 0) {
-      console.log("Clicked object name:", intersects[0].object.name);
+      const clickedObject = intersects[0].object;
+      console.log("Clicked object:", clickedObject.name);
+
+      // クリックされたオブジェクトに基づいて処理を実行
       if (
-        intersects[0].object.name === "Object_5" ||
-        intersects[0].object.name === "Object_5002"
+        clickedObject.name === "Object_5" ||
+        clickedObject.name === "Object_4"
       ) {
         window.open(gitHubURL, "_blank");
       } else if (
-        intersects[0].object.name === "Object_4002" ||
-        intersects[0].object.name === "Object_4"
+        clickedObject.name === "Object_4002" ||
+        clickedObject.name === "Object_5002"
       ) {
         window.open(faceBookURL, "_blank");
       } else if (
-        intersects[0].object.name === "Object_10002" ||
-        intersects[0].object.name === "Text003"
+        clickedObject.name === "Object_10002" ||
+        clickedObject.name === "Text003"
       ) {
         setIsAboutMeModalOpen(true);
       } else if (
-        intersects[0].object.name === "Object_10003" ||
-        intersects[0].object.name === "Text004"
+        clickedObject.name === "Object_10003" ||
+        clickedObject.name === "Text004"
       ) {
         setIsMyWorksModalOpen(true);
       }
@@ -119,7 +134,8 @@ function Desk() {
     };
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener("click", handleClick);
+    const canvas = canvasRef.current;
+    canvas.addEventListener("click", handleClick);
 
     const animate = () => {
       controls.update();
@@ -142,7 +158,7 @@ function Desk() {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("click", handleClick);
+      canvas.removeEventListener("click", handleClick);
       renderer.dispose();
     };
   }, []);
