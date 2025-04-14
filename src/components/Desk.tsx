@@ -31,12 +31,12 @@ function Desk() {
       console.log("Clicked object name:", intersects[0].object.name);
       if (
         intersects[0].object.name === "Object_5" ||
-        intersects[0].object.name === "Object_4"
+        intersects[0].object.name === "Object_5002"
       ) {
         window.open(gitHubURL, "_blank");
       } else if (
         intersects[0].object.name === "Object_4002" ||
-        intersects[0].object.name === "Object_5002"
+        intersects[0].object.name === "Object_4"
       ) {
         window.open(faceBookURL, "_blank");
       } else if (
