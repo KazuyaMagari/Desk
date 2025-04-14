@@ -30,6 +30,16 @@ function Desk() {
     if (intersects.length > 0) {
       console.log("Clicked object name:", intersects[0].object.name);
       if (
+        intersects[0].object.name === "Object_5" ||
+        intersects[0].object.name === "Object_4"
+      ) {
+        window.open(gitHubURL, "_blank");
+      } else if (
+        intersects[0].object.name === "Object_4002" ||
+        intersects[0].object.name === "Object_5002"
+      ) {
+        window.open(faceBookURL, "_blank");
+      } else if (
         intersects[0].object.name === "Object_10002" ||
         intersects[0].object.name === "Text003"
       ) {

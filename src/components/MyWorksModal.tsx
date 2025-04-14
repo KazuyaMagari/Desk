@@ -16,7 +16,7 @@ function MyWorksModal({ isOpen, onClose }: MyWorksModalProps) {
           <div className="window__title">My Works</div>
           <button className="window__btn" onClick={onClose}>
             &times;
-            <span>Close</span>
+            <span className="a11y-visually-hidden">Close</span>
           </button>
         </div>
         <div className="window__body">
