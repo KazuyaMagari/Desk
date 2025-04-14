@@ -28,6 +28,19 @@ body {
   background-size: cover;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 .window {
   display: flex;
   flex-direction: column;
@@ -38,12 +51,13 @@ body {
   max-width: 600px;
   max-height: 500px;
   background-color: #7f00ff;
-  filter: saturate(0.1);
   border-radius: 3px;
+  position: relative;
+  z-index: 1001;
 }
 
 .window:focus-within {
-  filter: saturate(1);
+  box-shadow: 15px 15px 0 #4d21c3;
 }
 
 .window__title-bar {
@@ -144,16 +158,38 @@ pre {
   background: hotpink;
 }
 
-.overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  left: 0;
-  top: 0;
+.window__body .card {
+  background-color: white;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.window__body .card:hover {
+  transform: translateY(-5px);
+}
+
+.window__body .card-img-top {
+  object-fit: cover;
+  height: 200px;
   width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(30px);
-  z-index: 1000;
+}
+
+.window__body .card-title {
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.window__body .card-text {
+  color: #34495e;
+}
+
+.window__body .btn-primary {
+  background-color: #5e2ae9;
+  border-color: #5e2ae9;
+}
+
+.window__body .btn-primary:hover {
+  background-color: #4d21c3;
+  border-color: #4d21c3;
 }

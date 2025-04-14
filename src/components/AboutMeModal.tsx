@@ -27,15 +27,22 @@ function AboutMeModal({ isOpen, onClose }: AboutMeModalProps) {
           </p>
           <h3>Skills</h3>
           <ul>
-            <li>React</li>
-            <li>Three.js</li>
-            <li>TypeScript</li>
-            <li>Web Development</li>
+            <li>
+              Languages: HTML, CSS, JavaScript, TypeScript, Python, C#, C++, C,
+              R
+            </li>
+            <li>
+              Frameworks: React, Node.js, Express, Tailwind CSS, Bootstrap,
+              Django
+            </li>
+            <li>Tools: Git, GitHub, VSCode, Cursor</li>
+            <li>Databases: MongoDB, MySQL, Firebase, SupaBase</li>
+            <li>3D Graphics: Three.js, WebGL</li>
+            <li>Web Development: Responsive Design, API Integration</li>
           </ul>
         </div>
       </div>
     </div>
   );
 }
-
 export default AboutMeModal;

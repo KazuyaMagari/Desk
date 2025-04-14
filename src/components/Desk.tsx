@@ -17,17 +17,45 @@ function Desk() {
   const [modelPosition, setModelPosition] = useState({ y: -10, x: 5 });
   const [isAboutMeModalOpen, setIsAboutMeModalOpen] = useState(false);
   const [isMyWorksModalOpen, setIsMyWorksModalOpen] = useState(false);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+
+  const handleClick = (event: MouseEvent) => {
+    if (!cameraRef.current || !sceneRef.current) return;
+
+    raycaster.setFromCamera(pointer, cameraRef.current);
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const intersects = raycaster.intersectObjects(sceneRef.current.children);
+    if (intersects.length > 0) {
+      console.log("Clicked object name:", intersects[0].object.name);
+      if (
+        intersects[0].object.name === "Object_10002" ||
+        intersects[0].object.name === "Text003"
+      ) {
+        setIsAboutMeModalOpen(true);
+      } else if (
+        intersects[0].object.name === "Object_10003" ||
+        intersects[0].object.name === "Text004"
+      ) {
+        setIsMyWorksModalOpen(true);
+      }
+    }
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      200
+      1000
     );
+    cameraRef.current = camera;
+    camera.position.set(8, 10, 10);
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
@@ -59,7 +87,6 @@ function Desk() {
         setIsLoading(false);
       }
     );
-    camera.position.set(10, 10, 8);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -82,33 +109,7 @@ function Desk() {
     };
 
     window.addEventListener("resize", handleResize);
-    // window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("click", onCLick);
-
-    function onCLick(event: MouseEvent) {
-      raycaster.setFromCamera(pointer, camera);
-      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      const intersects = raycaster.intersectObjects(scene.children);
-      if (intersects.length > 0) {
-        console.log("Clicked object name:", intersects[0].object.name);
-        if (
-          intersects[0].object.name === "Object_5" ||
-          intersects[0].object.name === "Object_4"
-        ) {
-          window.open(gitHubURL, "_blank");
-        } else if (
-          intersects[0].object.name === "Object_4002" ||
-          intersects[0].object.name === "Object_5002"
-        ) {
-          window.open(faceBookURL, "_blank");
-        } else if (intersects[0].object.name === "Object_10001") {
-          setIsAboutMeModalOpen(true);
-        } else if (intersects[0].object.name === "Plane002") {
-          setIsMyWorksModalOpen(true);
-        }
-      }
-    }
+    window.addEventListener("click", handleClick);
 
     const animate = () => {
       controls.update();
@@ -131,6 +132,7 @@ function Desk() {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("click", handleClick);
       renderer.dispose();
     };
   }, []);
