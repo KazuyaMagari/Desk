@@ -80,7 +80,7 @@ function Desk() {
       1000
     );
     cameraRef.current = camera;
-    camera.position.set(8, 10, 10);
+    camera.position.set(20, 10, 15);
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
       antialias: true,
